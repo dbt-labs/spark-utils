@@ -25,11 +25,11 @@ TK: Working integration tests.
 
 ----
 
-### Getting started with dbt
+### Getting started with dbt + Spark
 
 - [What is dbt](https://docs.getdbt.com/docs/introduction)?
 - [Installation](https://github.com/fishtown-analytics/dbt-spark)
-- Join the #spark channel in [dbt Slack][http://slack.getdbt.com/]
+- Join the #spark channel in [dbt Slack](http://slack.getdbt.com/)
 
 
 ## Code of Conduct
