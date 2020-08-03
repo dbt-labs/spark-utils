@@ -1,7 +1,3 @@
-{% macro dateadd(datepart, interval, from_date_or_timestamp) %}
-  {{ adapter_macro('spark_utils.dateadd', datepart, interval, from_date_or_timestamp) }}
-{% endmacro %}
-
 {% macro spark__dateadd(datepart, interval, from_date_or_timestamp) %}
 
     {% if datepart == 'day' %}

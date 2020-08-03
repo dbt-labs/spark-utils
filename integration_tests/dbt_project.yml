@@ -1,6 +1,7 @@
 
 name: 'spark_utils_integration_tests'
 version: '1.0'
+config-version: 2
 
 profile: 'integration_tests'
 
@@ -15,17 +16,21 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
     
+vars:
+  utils_namespaces:
+    - spark_utils
+    
 seeds:
-    spark_utils_integration_tests:
-        enabled: true
+  spark_utils_integration_tests:
+    +enabled: true
         
-        cross_db:
-            data_dateadd:
-                column_types:
-                    from_time: timestamp
-                    result: timestamp
+    cross_db:
+      data_dateadd:
+        +column_types:
+          from_time: timestamp
+          result: timestamp
                     
-            data_datediff:
-                column_types:
-                    first_date: timestamp
-                    second_date: timestamp
+      data_datediff:
+        +column_types:
+          first_date: timestamp
+          second_date: timestamp

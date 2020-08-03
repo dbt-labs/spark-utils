@@ -1,7 +1,3 @@
-{% macro datediff(first_date, second_date, datepart) %}
-  {{ adapter_macro('spark_utils.datediff', first_date, second_date, datepart) }}
-{% endmacro %}
-
 {% macro spark__datediff(first_date, second_date, datepart) %}
 
     {% if datepart == 'day' %}

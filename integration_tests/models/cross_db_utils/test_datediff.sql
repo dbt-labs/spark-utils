@@ -7,10 +7,10 @@ with data as (
 
 select
         case
-            when datepart = 'hour' then {{ spark_utils.datediff('first_date', 'second_date', 'hour') }}
-            when datepart = 'day' then {{ spark_utils.datediff('first_date', 'second_date', 'day') }}
-            when datepart = 'month' then {{ spark_utils.datediff('first_date', 'second_date', 'month') }}
-            when datepart = 'year' then {{ spark_utils.datediff('first_date', 'second_date', 'year') }}
+            when datepart = 'hour' then {{ dbt_utils.datediff('first_date', 'second_date', 'hour') }}
+            when datepart = 'day' then {{ dbt_utils.datediff('first_date', 'second_date', 'day') }}
+            when datepart = 'month' then {{ dbt_utils.datediff('first_date', 'second_date', 'month') }}
+            when datepart = 'year' then {{ dbt_utils.datediff('first_date', 'second_date', 'year') }}
             else null
         end as actual,
         result as expected
