@@ -1,3 +1,7 @@
 
 packages:
     - local: ../
+    - git: git@github.com:fishtown-analytics/dbt-utils.git
+      revision: feature/0-18-adapter-dispatch
+    - git: git@github.com:fishtown-analytics/dbt-utils.git
+      revision: feature/0-18-adapter-dispatch

@@ -28,7 +28,7 @@
 
     {% else %}
 
-        {{ exceptions.raise_compiler_error("macro dateadd not implemented for this datepart on Spark") }}
+        {{ exceptions.raise_compiler_error("macro dateadd not implemented for datepart ~ '" ~ datepart ~ "' ~ on Spark") }}
 
     {% endif %}
 
