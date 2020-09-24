@@ -1,0 +1,43 @@
+
+name: 'spark_utils_snowplow_integration_tests'
+version: '1.0'
+config-version: 2
+
+profile: 'integration_tests'
+
+source-paths: ["models"]
+analysis-paths: ["analysis"] 
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+    
+vars:
+  dbt_utils_dispatch_list: ['spark_utils']
+
+models:
+  dbt_utils_integration_tests:
+    cross_db_utils:
+      +enabled: true
+    datetime:
+      +enabled: true
+    materializations:
+      +enabled: false
+    schema_tests:
+      +enabled: false
+    sql:
+      +enabled: false
+    web:
+      +enabled: false
+
+seeds:
+  dbt_utils_integration_tests:
+    +enabled: false
+    cross_db:
+      +enabled: true
+    datetime:
+      +enabled: true
