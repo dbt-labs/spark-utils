@@ -1,5 +1,7 @@
 This [dbt](https://github.com/fishtown-analytics/dbt) package contains macros 
-that can be (re)used across dbt projects running on Spark.
+that:
+- can be (re)used across dbt projects running on Spark
+- define Spark-specific implementations of [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/adapter/#dispatch) from other packages
 
 ## Installation Instructions
 
@@ -9,9 +11,11 @@ for more information on installing packages.
 
 ----
 
-## Macros
+## Compatibility
 
-
+This package provides "shims" for:
+- [dbt_utils](https://github.com/fishtown-analytics/dbt-utils) (subset: cross-db utilities)
+- [snowplow](https://github.com/fishtown-analytics/snowplow) (tested on Databricks only)
 
 ----
 

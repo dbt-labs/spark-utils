@@ -1,0 +1,99 @@
+version: 2.1
+
+jobs:
+
+  integration-dbt-utils-spark:
+    environment:
+      DBT_INVOCATION_ENV: circle
+    docker:
+      - image: fishtownanalytics/test-container:9
+      - image: godatadriven/spark:2
+        environment:
+          WAIT_FOR: localhost:5432
+        command: >
+          --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
+          --name Thrift JDBC/ODBC Server
+          --conf spark.hadoop.javax.jdo.option.ConnectionURL=jdbc:postgresql://localhost/metastore
+          --conf spark.hadoop.javax.jdo.option.ConnectionUserName=dbt
+          --conf spark.hadoop.javax.jdo.option.ConnectionPassword=dbt
+          --conf spark.hadoop.javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+      - image: postgres:9.6.17-alpine
+        environment:
+          POSTGRES_USER: dbt
+          POSTGRES_PASSWORD: dbt
+          POSTGRES_DB: metastore
+
+    steps:
+      - checkout
+
+      - run:
+          name: Wait for Spark-Thrift
+          command: dockerize -wait tcp://localhost:10000 -timeout 15m -wait-retry-interval 5s
+
+      - run:
+          name: "Setup dbt"
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip setuptools
+            pip install dbt-spark
+            mkdir -p ~/.dbt
+            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+
+      - run:
+          name: "Run Tests - dbt-utils"
+          environment:
+            SPARK_TEST_HOST: localhost
+            SPARK_TEST_USER: dbt
+            method: thrift
+            SPARK_TEST_PORT: 10000
+            
+          command: |
+            . venv/bin/activate
+            cd integration_tests/dbt_utils
+            dbt --warn-error deps --target spark
+            dbt --warn-error seed --target spark --full-refresh
+            dbt --warn-error test --target spark
+
+      - store_artifacts:
+          path: ./logs
+
+  integration-snowplow-databricks:
+    environment:
+      DBT_INVOCATION_ENV: circle
+    docker:
+      - image: fishtownanalytics/test-container:9
+    steps:
+      - checkout
+      - run:
+          name: "Setup dbt"
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip setuptools
+            pip install dbt-spark
+            mkdir -p ~/.dbt
+            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+
+      - run:  
+          name: "Run Tests - Snowplow"
+          command: |
+            . venv/bin/activate
+            cd integration_tests/snowplow
+            dbt --warn-error deps --target databricks
+            dbt --warn-error seed --target databricks --full-refresh
+            dbt --warn-error run --target databricks --full-refresh --vars 'update: false'
+            dbt --warn-error run --target databricks --vars 'update: true'
+            dbt --warn-error test --target databricks
+
+      - store_artifacts:
+          path: ./logs
+
+workflows:
+  version: 2
+  test-shims:
+    jobs:
+      - integration-dbt-utils-spark
+      - integration-snowplow-databricks:
+          requires:
+            - integration-dbt-utils-spark
