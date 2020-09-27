@@ -1,26 +1,36 @@
 {% macro spark__dateadd(datepart, interval, from_date_or_timestamp) %}
 
-    {% if datepart == 'day' %}
+    {%- set clock_component -%}
+        to_unix_timestamp(to_timestamp({{from_date_or_timestamp}}))
+        - to_unix_timestamp(date({{from_date_or_timestamp}}))
+    {%- endset -%}
 
-        date_add(date({{from_date_or_timestamp}}), {{interval}})
+    {%- if datepart in ['day', 'week'] -%}
         
-    {% elif datepart == 'week' %}
+        {%- set multiplier = 7 if datepart == 'week' else 1 -%}
 
-        date_add(date({{from_date_or_timestamp}}), {{interval}} * 7)
+        to_timestamp(
+            to_unix_timestamp(
+                date_add(date({{from_date_or_timestamp}}), {{interval}} * {{multiplier}})
+            ) + {{clock_component}}
+        )
 
-    {% elif datepart == 'month' %}
-
-        add_months(date({{from_date_or_timestamp}}), {{interval}})
+    {%- elif datepart in ['month', 'quarter', 'year'] -%}
     
-    {% elif datepart == 'quarter' %}
-    
-        add_months(date({{from_date_or_timestamp}}), {{interval}} * 3)
-        
-    {% elif datepart == 'year' %}
-    
-        add_months(date({{from_date_or_timestamp}}), {{interval}} * 12)
+        {%- set multiplier -%} 
+            {%- if datepart == 'month' -%} 1
+            {%- elif datepart == 'quarter' -%} 3
+            {%- elif datepart == 'year' -%} 12
+            {%- endif -%}
+        {%- endset -%}
 
-    {% elif datepart in ('hour', 'minute', 'second', 'millisecond', 'microsecond') %}
+        to_timestamp(
+            to_unix_timestamp(
+                add_months(date({{from_date_or_timestamp}}), {{interval}} * {{multiplier}})
+            ) + {{clock_component}}
+        )
+
+    {%- elif datepart in ('hour', 'minute', 'second', 'millisecond', 'microsecond') -%}
     
         {%- set multiplier -%} 
             {%- if datepart == 'hour' -%} 3600
@@ -36,10 +46,10 @@
             + {{interval}} * {{multiplier}}
         )
 
-    {% else %}
+    {%- else -%}
 
         {{ exceptions.raise_compiler_error("macro dateadd not implemented for datepart ~ '" ~ datepart ~ "' ~ on Spark") }}
 
-    {% endif %}
+    {%- endif -%}
 
 {% endmacro %}

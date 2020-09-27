@@ -2,7 +2,7 @@
 
     split(
         {{ string_text }},
-        {{ delimiter_text }}
+        concat('\\', {{ delimiter_text }})
         )[({{ part_number - 1 }})]
 
 {% endmacro %}
