@@ -1,5 +1,5 @@
 
-name: 'spark_utils_snowplow_integration_tests'
+name: 'spark_utils_dbt_utils_integration_tests'
 version: '1.0'
 config-version: 2
 

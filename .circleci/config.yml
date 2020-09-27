@@ -45,7 +45,6 @@ jobs:
           environment:
             SPARK_TEST_HOST: localhost
             SPARK_TEST_USER: dbt
-            method: thrift
             SPARK_TEST_PORT: 10000
             
           command: |
