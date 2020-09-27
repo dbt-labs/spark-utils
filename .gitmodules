@@ -4,3 +4,4 @@
 [submodule "snowplow"]
 	path = snowplow
 	url = https://github.com/fishtown-analytics/snowplow
+	branch = refactor/int-test-org

@@ -56,9 +56,9 @@ jobs:
           command: |
             . venv/bin/activate
             cd integration_tests/dbt_utils
-            dbt --warn-error deps --target spark
-            dbt --warn-error seed --target spark --full-refresh
-            dbt --warn-error test --target spark
+            dbt deps --target spark
+            dbt seed --target spark --full-refresh
+            dbt test --target spark
 
       - store_artifacts:
           path: ./logs
