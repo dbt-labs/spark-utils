@@ -58,6 +58,7 @@ jobs:
             cd integration_tests/dbt_utils
             dbt deps --target spark
             dbt seed --target spark --full-refresh
+            dbt run --target spark --full-refresh
             dbt test --target spark
 
       - store_artifacts:
