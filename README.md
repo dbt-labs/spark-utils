@@ -25,8 +25,6 @@ We welcome contributions to this repo! To contribute a new feature or a fix,
 please open a Pull Request with 1) your changes and 2) updated documentation for 
 the `README.md` file.
 
-TK: Working integration tests.
-
 ----
 
 ### Getting started with dbt + Spark
