@@ -20,7 +20,9 @@
     "select * from " ~ ref('data_get_query_results_as_dict')
 ) %}
 
-{% do log('Actual dictionary: ' ~ actual_dictionary, info = true) %}
+{% if execute %}
+    {% do log('Actual dictionary: ' ~ actual_dictionary, info = true) %}
+{% endif %}
 
 {#-
 For reasons that remain unclear, Jinja won't return True for actual_dictionary == expected_dictionary.
