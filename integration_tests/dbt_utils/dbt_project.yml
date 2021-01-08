@@ -38,3 +38,10 @@ models:
       # integration test doesn't work
       test_recency:
         +enabled: false
+        
+seeds:
+  dbt_utils_integration_tests:
+    sql:
+      # integration test doesn't work
+      +data_get_query_results_as_dict:
+        +enabled: false
