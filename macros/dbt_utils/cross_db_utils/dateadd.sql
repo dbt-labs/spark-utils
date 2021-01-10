@@ -1,8 +1,9 @@
 {% macro spark__dateadd(datepart, interval, from_date_or_timestamp) %}
 
     {%- set clock_component -%}
-        to_unix_timestamp(to_timestamp({{from_date_or_timestamp}}))
-        - to_unix_timestamp(date({{from_date_or_timestamp}}))
+        {# make sure the dates + timestamps are real, otherwise raise an error asap #}
+        to_unix_timestamp({{ spark_utils.assert_not_null('to_timestamp', from_date_or_timestamp) }})
+        - to_unix_timestamp({{ spark_utils.assert_not_null('date', from_date_or_timestamp) }})
     {%- endset -%}
 
     {%- if datepart in ['day', 'week'] -%}
@@ -11,7 +12,7 @@
 
         to_timestamp(
             to_unix_timestamp(
-                date_add(date({{from_date_or_timestamp}}), {{interval}} * {{multiplier}})
+                date_add({{ spark_utils.assert_not_null('date', from_date_or_timestamp) }}, {{interval}} * {{multiplier}})
             ) + {{clock_component}}
         )
 
@@ -26,7 +27,10 @@
 
         to_timestamp(
             to_unix_timestamp(
-                add_months(date({{from_date_or_timestamp}}), {{interval}} * {{multiplier}})
+                add_months(
+                    {{ spark_utils.assert_not_null('date', from_date_or_timestamp) }},
+                    {{interval}} * {{multiplier}}
+                )
             ) + {{clock_component}}
         )
 
@@ -42,7 +46,7 @@
         {%- endset -%}
 
         to_timestamp(
-            to_unix_timestamp({{from_date_or_timestamp}})
+            {{ spark_utils.assert_not_null('to_unix_timestamp', from_date_or_timestamp) }}
             + {{interval}} * {{multiplier}}
         )
 
