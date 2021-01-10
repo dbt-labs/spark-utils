@@ -21,23 +21,17 @@ vars:
 
 models:
   dbt_utils_integration_tests:
-    cross_db_utils:
-      +enabled: true
-    datetime:
-      +enabled: true
-    materializations:
-      +enabled: false
-    schema_tests:
-      +enabled: false
     sql:
-      +enabled: false
-    web:
-      +enabled: false
-
-seeds:
-  dbt_utils_integration_tests:
-    +enabled: false
-    cross_db:
-      +enabled: true
-    datetime:
-      +enabled: true
+      # macro doesn't work
+      test_get_relations_by_pattern:
+        +enabled: false
+      test_get_relations_by_prefix_and_union:
+        +enabled: false
+      # integration test doesn't work
+      test_groupby:
+        +enabled: false
+    
+    schema_tests:
+      # integration test doesn't work
+      test_recency:
+        +enabled: false
