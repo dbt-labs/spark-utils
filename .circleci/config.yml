@@ -42,7 +42,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip setuptools
-            pip install dbt-spark
+            pip install dbt-spark[PyHive]
             mkdir -p ~/.dbt
             cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
 
