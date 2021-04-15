@@ -17,20 +17,17 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
     
 vars:
-  dbt_utils_dispatch_list: ['spark_utils']
+  dbt_utils_dispatch_list: ['spark_utils', 'dbt_utils_integration_tests']
 
 models:
   dbt_utils_integration_tests:
     sql:
-      # macro doesn't work
+      # macro doesn't work for this integration test (schema pattern)
       test_get_relations_by_pattern:
-        +enabled: false
-      test_get_relations_by_prefix_and_union:
         +enabled: false
       # integration test doesn't work
       test_groupby:
         +enabled: false
-    
     schema_tests:
       # integration test doesn't work
       test_recency:
