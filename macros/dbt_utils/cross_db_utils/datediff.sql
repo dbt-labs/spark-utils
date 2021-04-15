@@ -1,5 +1,13 @@
 {% macro spark__datediff(first_date, second_date, datepart) %}
 
+    {%- if datepart in ['day', 'week', 'month', 'quarter', 'year'] -%}
+    
+        {# make sure the dates are real, otherwise raise an error asap #}
+        {% set first_date = spark_utils.assert_not_null('date', first_date) %}
+        {% set second_date = spark_utils.assert_not_null('date', second_date) %}
+    
+    {%- endif -%}
+    
     {%- if datepart == 'day' -%}
     
         datediff({{second_date}}, {{first_date}})
@@ -66,12 +74,13 @@
 
         case when {{first_date}} < {{second_date}}
             then ceil((
-                to_unix_timestamp({{second_date}}) 
-                - to_unix_timestamp({{first_date}})
+                {# make sure the timestamps are real, otherwise raise an error asap #}
+                {{ spark_utils.assert_not_null('to_unix_timestamp', second_date) }}
+                - {{ spark_utils.assert_not_null('to_unix_timestamp', first_date) }}
             ) / {{divisor}})
             else floor((
-                to_unix_timestamp({{second_date}}) 
-                - to_unix_timestamp({{first_date}})
+                {{ spark_utils.assert_not_null('to_unix_timestamp', second_date) }}
+                - {{ spark_utils.assert_not_null('to_unix_timestamp', first_date) }}
             ) / {{divisor}})
             end
             
