@@ -16,6 +16,12 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
 
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+  - macro_namespace: snowplow
+    search_order: ['spark_utils', 'snowplow']
+
 models:
   incremental_strategy: merge
   file_format: delta
@@ -34,10 +40,8 @@ models:
         default:
           sessions_expected:
             +enabled: false
-    
+
 vars:
-  dbt_utils_dispatch_list: ['spark_utils']
-  snowplow_dispatch_list: ['spark_utils']
   'snowplow:timezone': 'America/New_York'
   'snowplow:events': '{{ ref("base_event") }}'
   'snowplow:context:web_page': '{{ ref("base_web_page") }}'

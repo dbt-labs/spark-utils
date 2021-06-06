@@ -75,12 +75,12 @@
         case when {{first_date}} < {{second_date}}
             then ceil((
                 {# make sure the timestamps are real, otherwise raise an error asap #}
-                {{ spark_utils.assert_not_null('to_unix_timestamp', second_date) }}
-                - {{ spark_utils.assert_not_null('to_unix_timestamp', first_date) }}
+                {{ spark_utils.assert_not_null('to_unix_timestamp', spark_utils.assert_not_null('to_timestamp', second_date)) }}
+                - {{ spark_utils.assert_not_null('to_unix_timestamp', spark_utils.assert_not_null('to_timestamp', first_date)) }}
             ) / {{divisor}})
             else floor((
-                {{ spark_utils.assert_not_null('to_unix_timestamp', second_date) }}
-                - {{ spark_utils.assert_not_null('to_unix_timestamp', first_date) }}
+                {{ spark_utils.assert_not_null('to_unix_timestamp', spark_utils.assert_not_null('to_timestamp', second_date)) }}
+                - {{ spark_utils.assert_not_null('to_unix_timestamp', spark_utils.assert_not_null('to_timestamp', first_date)) }}
             ) / {{divisor}})
             end
             
