@@ -18,15 +18,19 @@ integration_tests:
       user: "{{ env_var('SPARK_TEST_USER') }}"
       connect_retries: 5
       connect_timeout: 60
-      threads: 1
+      threads: 5
 
-    databricks:
+    databricks-utils: &databricks-odbc
       type: spark
       host: "{{ env_var('DBT_DATABRICKS_HOST_NAME') }}"
-      cluster: "{{ env_var('DBT_DATABRICKS_CLUSTER_NAME') }}"
+      endpoint: "{{ env_var('DBT_DATABRICKS_ENDPOINT') }}"
       token: "{{ env_var('DBT_DATABRICKS_TOKEN') }}"
-      method: http
+      method: odbc
+      driver: "{{ env_var('ODBC_DRIVER') }}"
       port: 443
+      threads: 5
+      schema: spark_utils_dbt_utils_integration_tests
+      
+    databricks-snowplow:
+      <<: *databricks-odbc
       schema: spark_utils_snowplow_integration_tests
-      connect_retries: 5
-      connect_timeout: 60

@@ -12,7 +12,10 @@
 
         to_timestamp(
             to_unix_timestamp(
-                date_add({{ spark_utils.assert_not_null('date', from_date_or_timestamp) }}, {{interval}} * {{multiplier}})
+                date_add(
+                    {{ spark_utils.assert_not_null('date', from_date_or_timestamp) }},
+                    cast({{interval}} * {{multiplier}} as int)
+                )
             ) + {{clock_component}}
         )
 
@@ -29,7 +32,7 @@
             to_unix_timestamp(
                 add_months(
                     {{ spark_utils.assert_not_null('date', from_date_or_timestamp) }},
-                    {{interval}} * {{multiplier}}
+                    cast({{interval}} * {{multiplier}} as int)
                 )
             ) + {{clock_component}}
         )
@@ -47,7 +50,7 @@
 
         to_timestamp(
             {{ spark_utils.assert_not_null('to_unix_timestamp', from_date_or_timestamp) }}
-            + {{interval}} * {{multiplier}}
+            + cast({{interval}} * {{multiplier}} as int)
         )
 
     {%- else -%}

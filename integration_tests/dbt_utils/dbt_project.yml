@@ -16,8 +16,12 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
     
-vars:
-  dbt_utils_dispatch_list: ['spark_utils', 'dbt_utils_integration_tests']
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order:
+      - spark_utils
+      - dbt_utils_integration_tests
+      - dbt_utils
 
 models:
   dbt_utils_integration_tests:

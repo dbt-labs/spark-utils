@@ -1,4 +1,4 @@
-This [dbt](https://github.com/fishtown-analytics/dbt) package contains macros 
+This [dbt](https://github.com/dbt-labs/dbt) package contains macros 
 that:
 - can be (re)used across dbt projects running on Spark
 - define Spark-specific implementations of [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/adapter/#dispatch) from other packages
@@ -14,12 +14,12 @@ for more information on installing packages.
 ## Compatibility
 
 This package provides "shims" for:
-- [dbt_utils](https://github.com/fishtown-analytics/dbt-utils), except for:
+- [dbt_utils](https://github.com/dbt-labs/dbt-utils), except for:
     - `dbt_utils.get_relations_by_prefix_sql`
     - `dbt_utils.get_tables_by_pattern_sql`
     - `dbt_utils.get_tables_by_prefix`
     - `dbt_utils.get_tables_by_pattern`
-- [snowplow](https://github.com/fishtown-analytics/snowplow) (tested on Databricks only)
+- [snowplow](https://github.com/dbt-labs/snowplow) (tested on Databricks only)
 
 ----
 
@@ -34,7 +34,7 @@ the `README.md` file.
 ### Getting started with dbt + Spark
 
 - [What is dbt](https://docs.getdbt.com/docs/introduction)?
-- [Installation](https://github.com/fishtown-analytics/dbt-spark)
+- [Installation](https://github.com/dbt-labs/dbt-spark)
 - Join the #spark channel in [dbt Slack](http://slack.getdbt.com/)
 
 
