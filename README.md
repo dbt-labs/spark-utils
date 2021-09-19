@@ -1,7 +1,7 @@
 This [dbt](https://github.com/dbt-labs/dbt) package contains macros 
 that:
 - can be (re)used across dbt projects running on Spark
-- define Spark-specific implementations of [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/adapter/#dispatch) from other packages
+- define Spark-specific implementations of [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch) from other packages
 
 ## Installation Instructions
 
@@ -20,6 +20,19 @@ This package provides "shims" for:
     - `dbt_utils.get_tables_by_prefix`
     - `dbt_utils.get_tables_by_pattern`
 - [snowplow](https://github.com/dbt-labs/snowplow) (tested on Databricks only)
+
+In order to use these "shims," you should set a `dispatch` config in your root project (on dbt v0.20.0 and newer). For example, with this project setting, dbt will first search for macro implementations inside the `spark_utils` package when resolving macros from the `dbt_utils` namespace:
+```
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+```
+
+### Note to maintainers of other packages
+
+The spark-utils package may be able to provide compatibility for your package, especially if your package leverages dbt-utils macros for cross-database compatibility. This package _does not_ need to be specified as a depedency of your package in `packages.yml`. Instead, you should encourage anyone using your package on Apache Spark / Databricks to:
+- Install `spark_utils` alongside your package
+- Add a `dispatch` config in their root project, like the one above
 
 ----
 
