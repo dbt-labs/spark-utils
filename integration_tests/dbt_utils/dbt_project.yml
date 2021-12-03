@@ -23,8 +23,13 @@ dispatch:
       - dbt_utils_integration_tests
       - dbt_utils
 
+seeds:
+  dbt_utils_integration_tests:
+    +file_format: delta
+
 models:
   dbt_utils_integration_tests:
+    +file_format: delta
     sql:
       # macro doesn't work for this integration test (schema pattern)
       test_get_relations_by_pattern:
