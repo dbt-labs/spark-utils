@@ -15,7 +15,6 @@ jobs:
 
     steps:
       - checkout
-      
       - run: &pull-submodules
           name: "Pull Submodules"
           command: |
@@ -25,7 +24,7 @@ jobs:
       - run: &setup-dbt
           name: "Setup dbt"
           command: |
-            python3 -m venv venv
+            python3.8 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip setuptools
             pip install --pre --upgrade dbt-spark[ODBC]
@@ -34,7 +33,6 @@ jobs:
 
       - run:
           name: "Run Tests - dbt-utils"
-            
           command: |
             . venv/bin/activate
             cd integration_tests/dbt_utils
