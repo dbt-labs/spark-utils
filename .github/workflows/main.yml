@@ -1,0 +1,44 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+jobs:
+  databricks:
+    runs-on: ubuntu-latest
+
+    env:
+      DBT_INVOCATION_ENV: gha
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Set up python
+        uses: actions/setup-python@v2
+
+      - name: Install python dependencies
+        run: |
+          pip install --user --upgrade pip
+          pip install --pre --upgrade dbt-spark[ODBC]
+          pip --version
+
+      - name: Setup dbt
+        run: |
+          mkdir -p ~/.dbt
+          cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+          dbt --version
+
+      - name: Run tests
+        run: |
+          cd integration_tests/dbt_utils
+          dbt deps --target databricks-utils
+          dbt seed --target databricks-utils --full-refresh
+          dbt run --target databricks-utils --full-refresh
+          dbt test --target databricks-utils
