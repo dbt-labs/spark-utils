@@ -20,12 +20,14 @@ jobs:
           name: "Pull Submodules"
           command: |
             git submodule init
-            git submodule update --remote
+            git submodule sync --recursive
+            git submodule foreach --recursive git fetch
+            git submodule update --init --recursive
 
       - run: &setup-dbt
           name: "Setup dbt"
           command: |
-            python3 -m venv venv
+            python3.8 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip setuptools
             pip install --pre --upgrade dbt-spark[ODBC]
@@ -58,11 +60,11 @@ jobs:
           command: |
             . venv/bin/activate
             cd integration_tests/snowplow
-            dbt --warn-error deps --target databricks-snowplow
-            dbt --warn-error seed --target databricks-snowplow --full-refresh
-            dbt --warn-error run --target databricks-snowplow --full-refresh --vars 'update: false'
-            dbt --warn-error run --target databricks-snowplow --vars 'update: true'
-            dbt --warn-error test --target databricks-snowplow
+            dbt deps --target databricks-snowplow
+            dbt seed --target databricks-snowplow --full-refresh
+            dbt run --target databricks-snowplow --full-refresh --vars 'update: false'
+            dbt run --target databricks-snowplow --vars 'update: true'
+            dbt test --target databricks-snowplow
 
       - store_artifacts:
           path: ./logs
