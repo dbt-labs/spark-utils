@@ -36,6 +36,18 @@ The spark-utils package may be able to provide compatibility for your package, e
 
 ----
 
+## Useful macros: maintenance
+
+_Caveat: These are not tested in CI, or guaranteed to work on all platforms._
+
+Each of these macros accepts a regex pattern, finds tables with names matching the pattern, and will loop over those tables to perform a maintenance operation:
+
+- `spark_optimize_delta_tables`: Runs `optimize` for all matched Delta tables
+- `spark_vacuum_delta_tables`: Runs `vacuum` for all matched Delta tables
+- `spark_analyze_tables`: Compute statistics for all matched tables
+
+----
+
 ### Contributing
 
 We welcome contributions to this repo! To contribute a new feature or a fix, 
