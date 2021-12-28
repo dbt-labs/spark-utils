@@ -19,6 +19,7 @@ class Args:
 
 
 args = Args()
+# Sets the Spark plugin in dbt.adapters.factory.FACTORY
 config = RuntimeConfig.from_args(args)
 
 register_adapter(config)
