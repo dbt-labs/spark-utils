@@ -1,0 +1,3 @@
+pytest
+git+https://github.com/dbt-labs/dbt-spark.git@jerco/utils-lift-shift#egg=dbt-spark[ODBC]
+git+https://github.com/dbt-labs/dbt-core.git@jerco/utils-lift-shift#egg=dbt-tests-adapter&subdirectory=tests/adapter
