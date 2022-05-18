@@ -38,7 +38,7 @@ jobs:
           name: "Run Functional Tests"
           command: |
             . venv/bin/activate
-            python3 pytest tests/functional --profile databricks_sql_endpoint
+            python3 -m pytest tests/functional --profile databricks_sql_endpoint
 
       - run:
           name: "Run Tests - dbt-utils"
