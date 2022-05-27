@@ -26,4 +26,4 @@ jobs:
 
      - name: Run pytest
        shell: bash
-       run: pytest tests/
+       run: DBT_PROFILES_DIR=$PWD pytest tests/
