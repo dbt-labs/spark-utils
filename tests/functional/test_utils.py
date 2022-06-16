@@ -12,7 +12,11 @@ class BaseSparkUtilsBackCompat(BaseUtils):
     # install this repo as a package
     @pytest.fixture(scope="class")
     def packages(self):
-        return {"packages": [{"local": os.getcwd()}]}
+        return {
+            "packages": [
+                {"local": os.getcwd()},
+                {"local": f"{os.getcwd()}/dbt-utils"}
+            ]}
     
     @pytest.fixture(scope="class")
     def project_config_update(self):
