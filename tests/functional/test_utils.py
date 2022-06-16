@@ -2,8 +2,10 @@ import os
 import pytest
 from dbt.tests.util import run_dbt
 from dbt.tests.adapter.utils.base_utils import BaseUtils
+from dbt.tests.adapter.utils.test_concat import BaseConcat
 from dbt.tests.adapter.utils.test_dateadd import BaseDateAdd
 from dbt.tests.adapter.utils.test_datediff import BaseDateDiff
+from dbt.tests.adapter.utils.test_split_part import BaseSplitPart
 
 
 class BaseSparkUtilsBackCompat(BaseUtils):
@@ -33,9 +35,17 @@ class BaseSparkUtilsBackCompat(BaseUtils):
         super().test_build_assert_equal(project)
 
 
-class TestDateAdd(BaseDateAdd):
+class TestConcat(BaseSparkUtilsBackCompat, BaseConcat):
     pass
 
 
-class TestDateDiff(BaseDateDiff):
+class TestDateAdd(BaseSparkUtilsBackCompat, BaseDateAdd):
+    pass
+
+
+class TestDateDiff(BaseSparkUtilsBackCompat, BaseDateDiff):
+    pass
+
+
+class TestSplitPart(BaseSparkUtilsBackCompat, BaseSplitPart):
     pass

@@ -1,3 +1,3 @@
 {% macro spark__concat(fields) -%}
-    concat({{ fields|join(', ') }})
+    {{ return(dbt.concat(fields)) }}
 {%- endmacro %}
