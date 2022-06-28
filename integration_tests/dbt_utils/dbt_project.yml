@@ -37,7 +37,14 @@ models:
       # integration test doesn't work
       test_groupby:
         +enabled: false
-    schema_tests:
+    generic_tests:
       # integration test doesn't work
       test_recency:
+        +enabled: false
+    cross_db_utils:
+      # integration test doesn't work
+      test_any_value:
+        +enabled: false
+      # integration test doesn't work
+      test_listagg:
         +enabled: false
