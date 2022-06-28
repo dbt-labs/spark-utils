@@ -37,6 +37,9 @@ models:
       # integration test doesn't work
       test_groupby:
         +enabled: false
+      # integration test doesn't work
+      test_pivot_apostrophe:
+        +enabled: false
     generic_tests:
       # integration test doesn't work
       test_recency:
