@@ -15,10 +15,12 @@ for more information on installing packages.
 
 This package provides "shims" for:
 - [dbt_utils](https://github.com/dbt-labs/dbt-utils), except for:
-    - `dbt_utils.get_relations_by_prefix_sql`
-    - `dbt_utils.get_tables_by_pattern_sql`
-    - `dbt_utils.get_tables_by_prefix`
-    - `dbt_utils.get_tables_by_pattern`
+    - `dbt_utils.get_relations_by_pattern`
+    - `dbt_utils.groupby`
+    - `dbt_utils.recency`
+    - `dbt_utils.any_value`
+    - `dbt_utils.listagg`
+    - `dbt_utils.pivot` with apostrophe(s) in the `values` 
 - [snowplow](https://github.com/dbt-labs/snowplow) (tested on Databricks only)
 
 In order to use these "shims," you should set a `dispatch` config in your root project (on dbt v0.20.0 and newer). For example, with this project setting, dbt will first search for macro implementations inside the `spark_utils` package when resolving macros from the `dbt_utils` namespace:
