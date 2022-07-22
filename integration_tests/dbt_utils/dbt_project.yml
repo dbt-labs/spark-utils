@@ -17,6 +17,8 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
     
 dispatch:
+  - macro_namespace: dbt
+    search_order: ['dbt']
   - macro_namespace: dbt_utils
     search_order:
       - spark_utils

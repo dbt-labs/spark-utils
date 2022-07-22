@@ -19,7 +19,7 @@ class BaseSparkUtilsBackCompat:
         return {
             "packages": [
                 {"local": os.getcwd()},
-                {"local": f"{os.getcwd()}/dbt-utils"}
+                {"git": "https://github.com/dbt-labs/dbt-utils"}
             ]}
     
     @pytest.fixture(scope="class")
