@@ -1,4 +1,4 @@
 pytest~=6.2.5
 pytest-spark~=0.6.0
 pytest-dbt-core~=0.1.0
-pyspark~=3.3
+dbt-spark[session]~=1.1.0
