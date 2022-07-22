@@ -4,3 +4,5 @@
 /**/dbt_packages/
 /**/logs/
 /**/env/
+/**/__pycache__/
+test.env
