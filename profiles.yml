@@ -5,4 +5,4 @@ sparkutils:
       type: spark
       method: session
       schema: test
-      host: NA        # not used, but required by `dbt-core`
+      host: NA        # not used, but required by `dbt-spark`
