@@ -32,6 +32,19 @@ seeds:
 models:
   dbt_utils_integration_tests:
     +file_format: delta
+    
+    # these were added after the cross-db migration
+    # see https://github.com/dbt-labs/dbt-core/issues/5520
+    # the compatibility will be properly added in dbt-spark
+    # just disable them for now
+    cross_db_utils:
+      test_array_append:
+        +enabled: false
+      test_array_concat:
+        +enabled: false
+      test_array_construct:
+        +enabled: false
+
     sql:
       # macro doesn't work for this integration test (schema pattern)
       test_get_relations_by_pattern:
@@ -43,13 +56,19 @@ models:
       test_pivot_apostrophe:
         +enabled: false
     generic_tests:
-      # integration test doesn't work
+      # default version of this integration test uses an explicit cast to 'datetime'
+      # which SparkSQL does not support
       test_recency:
         +enabled: false
     cross_db_utils:
       # integration test doesn't work
       test_any_value:
         +enabled: false
-      # integration test doesn't work
-      test_listagg:
-        +enabled: false
+
+tests:
+  dbt_utils_integration_tests:
+    cross_db_utils:
+      # expect exactly two failures
+      # (both use "order by", which isn't supported in SparkSQL)
+      assert_equal_test_listagg_actual__expected:
+        error_if: ">2"
