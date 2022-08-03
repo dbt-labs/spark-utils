@@ -17,8 +17,6 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
     
 dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt']
   - macro_namespace: dbt_utils
     search_order:
       - spark_utils
@@ -32,18 +30,6 @@ seeds:
 models:
   dbt_utils_integration_tests:
     +file_format: delta
-    
-    # these were added after the cross-db migration
-    # see https://github.com/dbt-labs/dbt-core/issues/5520
-    # the compatibility will be properly added in dbt-spark
-    # just disable them for now
-    cross_db_utils:
-      test_array_append:
-        +enabled: false
-      test_array_concat:
-        +enabled: false
-      test_array_construct:
-        +enabled: false
 
     sql:
       # macro doesn't work for this integration test (schema pattern)
@@ -57,7 +43,7 @@ models:
         +enabled: false
     generic_tests:
       # default version of this integration test uses an explicit cast to 'datetime'
-      # which SparkSQL does not support
+      # which SparkSQL does not support. override with our own version
       test_recency:
         +enabled: false
     cross_db_utils:
