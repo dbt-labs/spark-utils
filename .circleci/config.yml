@@ -30,9 +30,15 @@ jobs:
             python3.8 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip setuptools
-            pip install --pre --upgrade dbt-spark[ODBC]
+            pip install -r dev-requirements.txt
             mkdir -p ~/.dbt
             cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+
+      - run:
+          name: "Run Functional Tests"
+          command: |
+            . venv/bin/activate
+            python3 -m pytest tests/functional --profile databricks_sql_endpoint
 
       - run:
           name: "Run Tests - dbt-utils"
