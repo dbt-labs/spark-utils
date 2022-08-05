@@ -9,6 +9,7 @@ from pyspark.sql import SparkSession
 def test_create_table(
     spark_session: SparkSession, macro_generator: MacroGenerator
 ) -> None:
+    """The `get_tables` macro should return the created table."""
     expected_table = "default.example"
     spark_session.sql(f"CREATE TABLE {expected_table} (id int) USING parquet")
     tables = macro_generator()
