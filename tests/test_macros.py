@@ -13,4 +13,5 @@ def test_create_table(
     expected_table = "default.example"
     spark_session.sql(f"CREATE TABLE {expected_table} (id int) USING parquet")
     tables = macro_generator()
-    assert tables == [expected_table]
+    assert expected_table in tables
+
