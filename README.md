@@ -32,7 +32,7 @@ dispatch:
 
 ### Note to maintainers of other packages
 
-The spark-utils package may be able to provide compatibility for your package, especially if your package leverages dbt-utils macros for cross-database compatibility. This package _does not_ need to be specified as a depedency of your package in `packages.yml`. Instead, you should encourage anyone using your package on Apache Spark / Databricks to:
+The spark-utils package may be able to provide compatibility for your package, especially if your package leverages dbt-utils macros for cross-database compatibility. This package _does not_ need to be specified as a dependency of your package in `packages.yml`. Instead, you should encourage anyone using your package on Apache Spark / Databricks to:
 - Install `spark_utils` alongside your package
 - Add a `dispatch` config in their root project, like the one above
 
