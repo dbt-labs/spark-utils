@@ -2,4 +2,6 @@ pytest
 pyodbc==4.0.32
 git+https://github.com/dbt-labs/dbt-core.git#egg=dbt-core&subdirectory=core
 git+https://github.com/dbt-labs/dbt-core.git#egg=dbt-tests-adapter&subdirectory=tests/adapter
-git+https://github.com/dbt-labs/dbt-spark.git#egg=dbt-spark[ODBC]
+git+https://github.com/dbt-labs/dbt-spark.git#egg=dbt-spark[ODBC,session]
+pytest-spark~=0.6.0
+pytest-dbt-core~=0.1.0
