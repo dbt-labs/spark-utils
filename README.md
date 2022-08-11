@@ -32,7 +32,7 @@ dispatch:
 
 ### Note to maintainers of other packages
 
-The spark-utils package may be able to provide compatibility for your package, especially if your package leverages dbt-utils macros for cross-database compatibility. This package _does not_ need to be specified as a depedency of your package in `packages.yml`. Instead, you should encourage anyone using your package on Apache Spark / Databricks to:
+The spark-utils package may be able to provide compatibility for your package, especially if your package leverages dbt-utils macros for cross-database compatibility. This package _does not_ need to be specified as a dependency of your package in `packages.yml`. Instead, you should encourage anyone using your package on Apache Spark / Databricks to:
 - Install `spark_utils` alongside your package
 - Add a `dispatch` config in their root project, like the one above
 
@@ -55,6 +55,41 @@ Each of these macros accepts a regex pattern, finds tables with names matching t
 We welcome contributions to this repo! To contribute a new feature or a fix, 
 please open a Pull Request with 1) your changes and 2) updated documentation for 
 the `README.md` file.
+
+## Testing
+
+The macros are tested with [`pytest`](https://docs.pytest.org) and
+[`pytest-dbt-core`](https://pypi.org/project/pytest-dbt-core/). For example,
+the [`create_tables` macro is tested](./tests/test_macros.py) by:
+
+1. Create a test table (test setup):
+   ``` python
+   spark_session.sql(f"CREATE TABLE {table_name} (id int) USING parquet")
+   ```
+2. Call the macro generator:
+   ``` python
+   tables = macro_generator()
+   ```
+3. Assert test condition:
+   ``` python
+   assert simple_table in tables
+   ```
+4. Delete the test table (test cleanup):
+   ``` python
+   spark_session.sql(f"DROP TABLE IF EXISTS {table_name}")
+   ```
+
+A macro is fetched using the 
+[`macro_generator`](https://pytest-dbt-core.readthedocs.io/en/latest/dbt_spark.html#usage) 
+fixture and providing the macro name trough 
+[indirect parameterization](https://docs.pytest.org/en/7.1.x/example/parametrize.html?highlight=indirect#indirect-parametrization):
+
+``` python
+@pytest.mark.parametrize(
+    "macro_generator", ["macro.spark_utils.get_tables"], indirect=True
+)
+def test_create_table(macro_generator: MacroGenerator) -> None:
+```
 
 ----
 
