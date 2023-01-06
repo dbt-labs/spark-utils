@@ -79,5 +79,7 @@ workflows:
   version: 2
   test-shims:
     jobs:
-      - integration-dbt-utils-databricks
-      - integration-snowplow-databricks
+      - integration-dbt-utils-databricks:
+          context: aws-credentials
+      - integration-snowplow-databricks:
+          context: aws-credentials
