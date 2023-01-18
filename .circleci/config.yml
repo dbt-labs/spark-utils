@@ -80,6 +80,10 @@ workflows:
   test-shims:
     jobs:
       - integration-dbt-utils-databricks:
-          context: aws-credentials
+          context:
+            - aws-credentials
+            - profile-databricks-jeryeo
       - integration-snowplow-databricks:
-          context: aws-credentials
+          context:
+            - aws-credentials
+            - profile-databricks-jeryeo
