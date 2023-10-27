@@ -15,7 +15,6 @@ for more information on installing packages.
 
 This package provides "shims" for:
 - [dbt_utils](https://github.com/dbt-labs/dbt-utils), except for:
-    - `dbt_utils.get_relations_by_pattern`
     - `dbt_utils.groupby`
     - `dbt_utils.recency`
     - `dbt_utils.any_value`
