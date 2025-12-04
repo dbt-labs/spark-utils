@@ -1,20 +1,15 @@
-
 name: 'spark_utils_snowplow_integration_tests'
 version: '1.0'
 config-version: 2
 
 profile: 'integration_tests'
 
-source-paths: ["models"]
-analysis-paths: ["analysis"] 
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
-data-paths: ["data"]
 macro-paths: ["macros"]
-
-target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
-    - "target"
-    - "dbt_modules"
+  - "target"
+  - "dbt_modules"
 
 dispatch:
   - macro_namespace: dbt_utils
@@ -23,9 +18,6 @@ dispatch:
     search_order: ['spark_utils', 'snowplow']
 
 models:
-  incremental_strategy: merge
-  file_format: delta
-  
   snowplow_integration_tests:
     pre:
       default:
@@ -41,17 +33,16 @@ models:
           sessions_expected:
             +enabled: false
 
+  +incremental_strategy: merge
+  +file_format: delta
 vars:
   'snowplow:timezone': 'America/New_York'
   'snowplow:events': '{{ ref("base_event") }}'
   'snowplow:context:web_page': '{{ ref("base_web_page") }}'
-  'snowplow:context:performance_timing': FALSE
-  'snowplow:context:useragent': FALSE
+  'snowplow:context:performance_timing': false
+  'snowplow:context:useragent': false
   'snowplow:pass_through_columns': ['test_add_col']
-    
 seeds:
-  quote_columns: false
-  
   snowplow_integration_tests:
     event:
       +column_types:
@@ -77,3 +68,8 @@ seeds:
         +column_types:
           session_start: string
           session_end: string
+  +quote_columns: false
+flags:
+  require_generic_test_arguments_property: true
+seed-paths: ["data"]
+model-paths: ["models"]

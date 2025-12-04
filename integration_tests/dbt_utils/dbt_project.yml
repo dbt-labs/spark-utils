@@ -1,21 +1,15 @@
-
 name: 'spark_utils_dbt_utils_integration_tests'
 version: '1.0'
 config-version: 2
 
 profile: 'integration_tests'
 
-source-paths: ["models"]
-analysis-paths: ["analysis"] 
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
-data-paths: ["data"]
 macro-paths: ["macros"]
-
-target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
-    - "target"
-    - "dbt_modules"
-    
+  - "target"
+  - "dbt_modules"
 dispatch:
   - macro_namespace: dbt_utils
     search_order:
@@ -57,4 +51,8 @@ tests:
       # expect exactly two failures
       # (both use "order by", which isn't supported in SparkSQL)
       assert_equal_test_listagg_actual__expected:
-        error_if: ">2"
+        +error_if: ">2"
+flags:
+  require_generic_test_arguments_property: true
+seed-paths: ["data"]
+model-paths: ["models"]

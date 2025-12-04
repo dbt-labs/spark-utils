@@ -6,3 +6,4 @@
 /**/env/
 /**/__pycache__/
 test.env
+dbt_internal_packages/
