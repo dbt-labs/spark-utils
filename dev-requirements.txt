@@ -5,3 +5,4 @@ git+https://github.com/dbt-labs/dbt-core.git#egg=dbt-tests-adapter&subdirectory=
 git+https://github.com/dbt-labs/dbt-spark.git#egg=dbt-spark[ODBC,session]
 pytest-spark~=0.6.0
 pytest-dbt-core~=0.1.0
+sqlparse>=0.4.4 # not directly required, pinned by Snyk to avoid a vulnerability
