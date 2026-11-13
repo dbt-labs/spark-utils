@@ -1,5 +1,4 @@
 pytest
-pyodbc==4.0.32
 dbt-core
 dbt-tests-adapter
 dbt-spark[ODBC,session]
