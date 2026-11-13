@@ -26,4 +26,4 @@ jobs:
 
      - name: Run unit tests
        shell: bash
-       run: DBT_PROFILES_DIR=$PWD pytest tests/unit
+       run: DBT_PROFILES_DIR=$PWD pytest tests/unit --profiles-dir $PWD
