@@ -1,4 +1,4 @@
-pytest
+pytest<8
 dbt-core
 dbt-tests-adapter
 dbt-spark[ODBC,session]
