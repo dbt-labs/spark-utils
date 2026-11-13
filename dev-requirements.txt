@@ -1,6 +1,6 @@
-pytest<9
+pytest
 dbt-core
 dbt-tests-adapter
 dbt-spark[ODBC,session]
-pytest-spark~=0.6.0
+pytest-spark~=0.8.0
 pytest-dbt-core~=0.1.0
