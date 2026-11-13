@@ -1,6 +1,8 @@
 pytest
 dbt-core
 dbt-tests-adapter
-dbt-spark[ODBC,session]
+# dbt-spark>=1.8 changed spark__list_relations_without_caching to read relation.schema,
+# which breaks the get_tables macro (it passes a plain schema string)
+dbt-spark[session]<1.8
 pytest-spark~=0.8.0
 pytest-dbt-core~=0.2.4
