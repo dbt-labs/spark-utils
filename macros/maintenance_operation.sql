@@ -2,8 +2,7 @@
 
   {% set tables = [] %}
   {% for database in spark__list_schemas('not_used') %}
-    {% set schema_relation = api.Relation.create(schema=database[0]) %}
-    {% for table in spark__list_relations_without_caching(schema_relation) %}
+    {% for table in spark__list_relations_without_caching(database[0]) %}
       {% set db_tablename = database[0] ~ "." ~ table[1] %}
       {% set is_match = modules.re.match(table_regex_pattern, db_tablename) %}
       {% if is_match %}
