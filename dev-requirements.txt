@@ -1,7 +1,8 @@
 pytest
-pyodbc==4.0.32
-git+https://github.com/dbt-labs/dbt-core.git#egg=dbt-core&subdirectory=core
-git+https://github.com/dbt-labs/dbt-core.git#egg=dbt-tests-adapter&subdirectory=tests/adapter
-git+https://github.com/dbt-labs/dbt-spark.git#egg=dbt-spark[ODBC,session]
-pytest-spark~=0.6.0
-pytest-dbt-core~=0.1.0
+dbt-core
+dbt-tests-adapter
+# dbt-spark>=1.8 changed spark__list_relations_without_caching to read relation.schema,
+# which breaks the get_tables macro (it passes a plain schema string)
+dbt-spark[session]<1.8
+pytest-spark~=0.8.0
+pytest-dbt-core~=0.2.4
