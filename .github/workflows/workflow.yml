@@ -20,7 +20,7 @@ jobs:
      - name: Install dependencies
        shell: bash
        run: |
-         sudo apt-get install libsasl2-dev
+         sudo apt-get install libsasl2-dev unixodbc-dev
          python -m pip install --upgrade pip
          python -m pip install -r dev-requirements.txt
 
