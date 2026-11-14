@@ -22,6 +22,8 @@ This package provides "shims" for:
     - `dbt_utils.listagg`
     - `dbt_utils.pivot` with apostrophe(s) in the `values` 
 - [snowplow](https://github.com/dbt-labs/snowplow) (tested on Databricks only)
+- [dbt-expectations](https://github.com/calogica/dbt-expectations) select macros:
+   - `dbt_expectations.regexp_instr`
 
 In order to use these "shims," you should set a `dispatch` config in your root project (on dbt v0.20.0 and newer). For example, with this project setting, dbt will first search for macro implementations inside the `spark_utils` package when resolving macros from the `dbt_utils` namespace:
 ```
