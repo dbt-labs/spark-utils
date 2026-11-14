@@ -1,5 +1,9 @@
 {% macro spark__get_relations_by_pattern(schema_pattern, table_pattern, exclude='', database=target.database) %}
 
+    {%- call statement('change_database', fetch_result=False) %}
+        USE CATALOG {{ database }}
+    {%- endcall -%}
+
     {%- call statement('get_tables', fetch_result=True) %}
 
         show table extended in {{ schema_pattern }} like '{{ table_pattern }}'
