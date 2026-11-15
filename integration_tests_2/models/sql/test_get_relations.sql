@@ -1,12 +1,15 @@
+{{ config(enabled=target.type in ['databricks', 'spark']) }}
+
+{% call spark_only_model() %}
 -- depends_on: {{ ref('relations_prefix_a') }}
 -- depends_on: {{ ref('relations_prefix_b') }}
 -- depends_on: {{ ref('relations_other') }}
 
-{%- if not execute -%}
+{% if not execute %}
 
 select 'parse time' as macro, 0 as actual, 0 as expected
 
-{%- else -%}
+{% else %}
 
 {%- set schema = target.schema -%}
 {%- set by_prefix = spark_utils.spark__get_relations_by_prefix(schema, 'relations_prefix_') -%}
@@ -28,4 +31,5 @@ select 'prefix matches every relations_* model', {{ all_relations | length }}, 3
 union all
 select 'no match returns an empty list', {{ no_match | length }}, 0
 
-{%- endif -%}
+{% endif %}
+{% endcall %}

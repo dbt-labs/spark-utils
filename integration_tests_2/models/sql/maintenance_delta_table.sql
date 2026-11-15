@@ -1,3 +1,5 @@
+{{ config(enabled=target.type in ['databricks', 'spark']) }}
+
 {{ config(materialized='table') }}
 
 select

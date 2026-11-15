@@ -1,3 +1,6 @@
+{{ config(enabled=target.type in ['databricks', 'spark']) }}
+
+{% call spark_only_model() %}
 with urls as (
     select 'http://example.com/?utm_source=google&gclid=abc123&x=1' as url, 'gclid' as param, 'abc123' as expected
     union all select 'http://example.com/?gclid=first&utm_source=google', 'gclid', 'first'
@@ -15,3 +18,4 @@ select
         when 'utm_source' then {{ dbt_utils.get_url_parameter('url', 'utm_source') }}
     end as actual
 from urls
+{% endcall %}

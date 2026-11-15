@@ -6,15 +6,3 @@ profile: spark_utils_integration_tests_2
 dispatch:
   - macro_namespace: dbt_utils
     search_order: [spark_utils, dbt_utils]
-
-models:
-  spark_utils_integration_tests_2:
-    # these exercise Spark-only macros, so only build them on Spark-based adapters
-    cross_db_utils:
-      +enabled: "{{ target.type in ['databricks', 'spark'] }}"
-    web:
-      +enabled: "{{ target.type in ['databricks', 'spark'] }}"
-    sql:
-      +enabled: "{{ target.type in ['databricks', 'spark'] }}"
-    snowplow:
-      +enabled: "{{ target.type in ['databricks', 'spark'] }}"
