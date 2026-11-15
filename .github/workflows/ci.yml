@@ -82,10 +82,6 @@ jobs:
           working-directory: integration_tests_2
           run: dbt build --target databricks
 
-        - name: Run the maintenance macros on Databricks
-          working-directory: integration_tests_2
-          run: dbt run-operation test_maintenance_macros --target databricks
-
   # Reproduces https://github.com/dbt-labs/spark-utils/issues/52: dbt-core resolves every
   # adapter.dispatch at parse time, and assert_not_null has no default__ implementation.
   # Expected to FAIL until that is fixed.
@@ -108,3 +104,34 @@ jobs:
         - name: Parse using dbt-core on DuckDB
           working-directory: integration_tests_2
           run: dbt parse
+
+  # The maintenance macros scan every schema in the workspace, which is slow,
+  # so they run in their own job in parallel with the rest.
+  databricks-maintenance:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_maintenance
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Build the tables the maintenance macros operate on
+          working-directory: integration_tests_2
+          run: dbt build --target databricks --select maintenance_delta_table maintenance_view
+
+        - name: Run the maintenance macros on Databricks
+          working-directory: integration_tests_2
+          run: dbt run-operation test_maintenance_macros --target databricks

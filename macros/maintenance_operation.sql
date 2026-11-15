@@ -25,7 +25,7 @@
 {% macro get_delta_tables(table_regex_pattern='.*') %}
 
   {% set delta_tables = [] %}
-  {% for db_tablename in get_tables(table_regex_pattern) %}
+  {% for db_tablename in spark_utils.get_tables(table_regex_pattern) %}
     {% call statement('table_detail', fetch_result=True) -%}
       describe extended {{ db_tablename }}
     {% endcall %}
@@ -61,7 +61,7 @@
 
 {% macro spark_optimize_delta_tables(table_regex_pattern='.*') %}
 
-  {% for table in get_delta_tables(table_regex_pattern) %}
+  {% for table in spark_utils.get_delta_tables(table_regex_pattern) %}
     {% set start=modules.datetime.datetime.now() %}
     {% set message_prefix=loop.index ~ " of " ~ loop.length %}
     {{ dbt_utils.log_info(message_prefix ~ " Optimizing " ~ table) }}
@@ -75,7 +75,7 @@
 
 {% macro spark_vacuum_delta_tables(table_regex_pattern='.*') %}
 
-  {% for table in get_delta_tables(table_regex_pattern) %}
+  {% for table in spark_utils.get_delta_tables(table_regex_pattern) %}
     {% set start=modules.datetime.datetime.now() %}
     {% set message_prefix=loop.index ~ " of " ~ loop.length %}
     {{ dbt_utils.log_info(message_prefix ~ " Vacuuming " ~ table) }}
@@ -89,9 +89,9 @@
 
 {% macro spark_analyze_tables(table_regex_pattern='.*') %}
 
-  {% for table in get_tables(table_regex_pattern) %}
+  {% for table in spark_utils.get_tables(table_regex_pattern) %}
     {% set start=modules.datetime.datetime.now() %}
-    {% set columns = get_statistic_columns(table) | join(',') %}
+    {% set columns = spark_utils.get_statistic_columns(table) | join(',') %}
     {% set message_prefix=loop.index ~ " of " ~ loop.length %}
     {{ dbt_utils.log_info(message_prefix ~ " Analyzing " ~ table) }}
     {% if columns != '' %}

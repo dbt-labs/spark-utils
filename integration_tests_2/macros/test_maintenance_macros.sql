@@ -14,11 +14,6 @@
         {{ exceptions.raise_compiler_error("get_tables must not return views, got: " ~ tables) }}
     {%- endif -%}
 
-    {%- set delta_tables = spark_utils.get_delta_tables(pattern) | map('trim') | list -%}
-    {%- if table_name not in delta_tables -%}
-        {{ exceptions.raise_compiler_error("get_delta_tables did not find " ~ table_name ~ ", got: " ~ delta_tables) }}
-    {%- endif -%}
-
     {%- set columns = spark_utils.get_statistic_columns(table_name) -%}
     {%- if columns | sort | list != ['`id`', '`name`'] -%}
         {{ exceptions.raise_compiler_error("get_statistic_columns should skip array/struct columns, got: " ~ columns) }}
