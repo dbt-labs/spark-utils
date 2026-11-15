@@ -5,3 +5,11 @@ spark_utils_duckdb_parse:
       type: duckdb
       path: ./target/parse.duckdb
       threads: 1
+
+    databricks:
+      type: databricks
+      host: "{{ env_var('DBT_DATABRICKS_HOST_NAME') }}"
+      http_path: "/sql/1.0/endpoints/{{ env_var('DBT_DATABRICKS_ENDPOINT') }}"
+      token: "{{ env_var('DBT_DATABRICKS_TOKEN') }}"
+      schema: spark_utils_ci_debug
+      threads: 1

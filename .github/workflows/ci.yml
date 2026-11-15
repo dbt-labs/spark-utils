@@ -45,3 +45,23 @@ jobs:
         - name: Parse the minimal project using a DuckDB profile
           working-directory: integration_tests_duckdb
           run: dbt parse --profiles-dir .
+
+  debug-databricks:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Check the Databricks connection profile
+          working-directory: integration_tests_duckdb
+          run: dbt debug --profiles-dir . --target databricks
+          env:
+              DBT_DATABRICKS_HOST_NAME: ${{ secrets.DBT_DATABRICKS_HOST_NAME }}
+              DBT_DATABRICKS_ENDPOINT: ${{ secrets.DBT_DATABRICKS_ENDPOINT }}
+              DBT_DATABRICKS_TOKEN: ${{ secrets.DBT_DATABRICKS_TOKEN }}
