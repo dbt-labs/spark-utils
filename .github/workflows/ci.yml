@@ -135,3 +135,33 @@ jobs:
         - name: Run the maintenance macros on Databricks
           working-directory: integration_tests_2
           run: dbt run-operation test_maintenance_macros --target databricks
+
+  # Same tests as the `databricks` job, but with dbt v1 (dbt-core + dbt-databricks)
+  databricks-dbt-core:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_core
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-databricks
+          run: pip install "dbt-core>=1.11,<1.12" dbt-databricks
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Check the Databricks connection profile
+          working-directory: integration_tests_2
+          run: dbt debug --target databricks
+
+        - name: Build and test the macros on Databricks with dbt-core
+          working-directory: integration_tests_2
+          run: dbt build --target databricks
