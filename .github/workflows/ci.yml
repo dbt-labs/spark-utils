@@ -40,15 +40,15 @@ jobs:
 
         - name: Install the package under test
           working-directory: integration_tests_2
-          run: dbt deps --profiles-dir .
+          run: dbt deps
 
         - name: Check the DuckDB connection profile
           working-directory: integration_tests_2
-          run: dbt debug --profiles-dir .
+          run: dbt debug
 
         - name: Parse the minimal project using a DuckDB profile
           working-directory: integration_tests_2
-          run: dbt parse --profiles-dir .
+          run: dbt parse
 
   databricks:
       runs-on: ubuntu-latest
@@ -68,19 +68,19 @@ jobs:
 
         - name: Install the package under test
           working-directory: integration_tests_2
-          run: dbt deps --profiles-dir .
+          run: dbt deps
 
         - name: Check the Databricks connection profile
           working-directory: integration_tests_2
-          run: dbt debug --profiles-dir . --target databricks
+          run: dbt debug --target databricks
 
         - name: Parse the minimal project on Databricks
           working-directory: integration_tests_2
-          run: dbt parse --profiles-dir . --target databricks
+          run: dbt parse --target databricks
 
         - name: Build the minimal project on Databricks
           working-directory: integration_tests_2
-          run: dbt build --profiles-dir . --target databricks
+          run: dbt build --target databricks
 
   # Reproduces https://github.com/dbt-labs/spark-utils/issues/52: dbt-core resolves every
   # adapter.dispatch at parse time, and assert_not_null has no default__ implementation.
@@ -99,8 +99,8 @@ jobs:
 
         - name: Install the package under test
           working-directory: integration_tests_2
-          run: dbt deps --profiles-dir .
+          run: dbt deps
 
         - name: Parse using dbt-core on DuckDB
           working-directory: integration_tests_2
-          run: dbt parse --profiles-dir .
+          run: dbt parse
