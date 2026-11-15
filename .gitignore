@@ -13,3 +13,5 @@ dbt_internal_packages/
 
 # dbt user-level file
 .user.yml
+
+package-lock.yml
