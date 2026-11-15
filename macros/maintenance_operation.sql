@@ -1,8 +1,9 @@
 {% macro get_tables(table_regex_pattern='.*') %}
 
   {% set tables = [] %}
-  {% for database in spark__list_schemas('not_used') %}
-    {% for table in spark__list_relations_without_caching(database[0]) %}
+  {% set schemas = run_query('show schemas') %}
+  {% for database in schemas %}
+    {% for table in run_query('show tables in ' ~ database[0]) %}
       {% set db_tablename = database[0] ~ "." ~ table[1] %}
       {% set is_match = modules.re.match(table_regex_pattern, db_tablename) %}
       {% if is_match %}
