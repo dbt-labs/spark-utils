@@ -38,6 +38,10 @@ jobs:
         - name: Install dbt and DuckDB
           run: pip install "dbt>=2.0.0,<3.0.0"
 
+        - name: Check the DuckDB connection profile
+          working-directory: integration_tests_duckdb
+          run: dbt debug --profiles-dir .
+
         - name: Parse the minimal project using a DuckDB profile
           working-directory: integration_tests_duckdb
           run: dbt parse --profiles-dir .
