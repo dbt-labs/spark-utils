@@ -39,11 +39,11 @@ jobs:
           run: pip install "dbt>=2.0.0,<3.0.0"
 
         - name: Check the DuckDB connection profile
-          working-directory: integration_tests_duckdb
+          working-directory: integration_tests_2
           run: dbt debug --profiles-dir .
 
         - name: Parse the minimal project using a DuckDB profile
-          working-directory: integration_tests_duckdb
+          working-directory: integration_tests_2
           run: dbt parse --profiles-dir .
 
   databricks:
@@ -63,13 +63,13 @@ jobs:
           run: pip install "dbt>=2.0.0,<3.0.0"
 
         - name: Check the Databricks connection profile
-          working-directory: integration_tests_duckdb
+          working-directory: integration_tests_2
           run: dbt debug --profiles-dir . --target databricks
 
         - name: Parse the minimal project on Databricks
-          working-directory: integration_tests_duckdb
+          working-directory: integration_tests_2
           run: dbt parse --profiles-dir . --target databricks
 
         - name: Build the minimal project on Databricks
-          working-directory: integration_tests_duckdb
+          working-directory: integration_tests_2
           run: dbt build --profiles-dir . --target databricks

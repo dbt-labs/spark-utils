@@ -1,4 +1,4 @@
-spark_utils_duckdb_parse:
+spark_utils_integration_tests_2:
   target: duckdb
   outputs:
     duckdb:
