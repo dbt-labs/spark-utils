@@ -11,5 +11,5 @@ spark_utils_integration_tests_2:
       host: "{{ env_var('DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
       token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
-      schema: spark_utils_ci_debug
+      schema: "{{ env_var('DATABRICKS_SCHEMA', 'spark_utils_ci_debug') }}"
       threads: 1
