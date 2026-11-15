@@ -46,8 +46,12 @@ jobs:
           working-directory: integration_tests_duckdb
           run: dbt parse --profiles-dir .
 
-  debug-databricks:
+  databricks:
       runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
       steps:
         - uses: actions/checkout@v4
 
@@ -61,7 +65,11 @@ jobs:
         - name: Check the Databricks connection profile
           working-directory: integration_tests_duckdb
           run: dbt debug --profiles-dir . --target databricks
-          env:
-              DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-              DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
-              DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+
+        - name: Parse the minimal project on Databricks
+          working-directory: integration_tests_duckdb
+          run: dbt parse --profiles-dir . --target databricks
+
+        - name: Build the minimal project on Databricks
+          working-directory: integration_tests_duckdb
+          run: dbt build --profiles-dir . --target databricks
