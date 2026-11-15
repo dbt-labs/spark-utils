@@ -62,6 +62,6 @@ jobs:
           working-directory: integration_tests_duckdb
           run: dbt debug --profiles-dir . --target databricks
           env:
-              DBT_DATABRICKS_HOST_NAME: ${{ secrets.DBT_DATABRICKS_HOST_NAME }}
-              DBT_DATABRICKS_ENDPOINT: ${{ secrets.DBT_DATABRICKS_ENDPOINT }}
-              DBT_DATABRICKS_TOKEN: ${{ secrets.DBT_DATABRICKS_TOKEN }}
+              DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+              DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+              DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
