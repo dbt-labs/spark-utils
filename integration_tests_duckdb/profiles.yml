@@ -1,0 +1,7 @@
+spark_utils_duckdb_parse:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: ./target/parse.duckdb
+      threads: 1
