@@ -195,3 +195,55 @@ jobs:
         - name: Run the maintenance macros on Databricks with dbt-core
           working-directory: integration_tests_2
           run: dbt run-operation test_maintenance_macros --target databricks
+
+  # spark_utils overrides the cross-database macros that dbt-utils < 1.0 ships
+  # (array_concat, etc.). These jobs install dbt-utils 0.9.6 and call them as `dbt_utils.X`.
+  databricks-dbt-utils-0-dbt-core:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_utils_0_dbt_core
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-databricks
+          run: pip install "dbt-core>=1.11,<1.12" dbt-databricks
+
+        - name: Install the packages under test
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt deps
+
+        - name: Build and test with dbt-utils 0.9.6
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt build
+
+  databricks-dbt-utils-0-dbt-2:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_utils_0_dbt_2
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the packages under test
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt deps
+
+        - name: Build and test with dbt-utils 0.9.6
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt build

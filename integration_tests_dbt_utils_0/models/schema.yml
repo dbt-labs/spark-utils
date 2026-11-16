@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: test_dbt_utils_macros
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_dbt_utils_scalar_macros
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual = expected"
