@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: test_get_url_parameter
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"

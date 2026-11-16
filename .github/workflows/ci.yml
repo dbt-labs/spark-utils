@@ -1,0 +1,249 @@
+# **what?**
+# Run tests for spark-utils against supported adapters
+
+# **why?**
+# To ensure that spark-utils works as expected with all supported adapters
+
+# **when?**
+# On every PR, and every push to main and when manually triggered
+
+name: Package Integration Tests
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+
+jobs:
+  run-tests:
+      runs-on: ubuntu-latest
+      steps:
+        # Placeholder: replace with a call to the shared package-testing workflow
+        # (as dbt-utils does) once the trivial version is confirmed working.
+        - name: Hello from CI
+          run: echo "spark-utils CI is running"
+
+  parse-duckdb:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt and DuckDB
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Check the DuckDB connection profile
+          working-directory: integration_tests_2
+          run: dbt debug
+
+        - name: Parse the minimal project using a DuckDB profile
+          working-directory: integration_tests_2
+          run: dbt parse
+
+  databricks:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Check the Databricks connection profile
+          working-directory: integration_tests_2
+          run: dbt debug --target databricks
+
+        - name: Parse the minimal project on Databricks
+          working-directory: integration_tests_2
+          run: dbt parse --target databricks
+
+        - name: Build and test the macros on Databricks
+          working-directory: integration_tests_2
+          run: dbt build --target databricks
+
+  # Reproduces https://github.com/dbt-labs/spark-utils/issues/52: dbt-core resolves every
+  # adapter.dispatch at parse time, and assert_not_null has no default__ implementation.
+  # Expected to FAIL until that is fixed.
+  parse-dbt-core-duckdb:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-duckdb
+          run: pip install "dbt-core>=1.11,<1.12" dbt-duckdb
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Parse using dbt-core on DuckDB
+          working-directory: integration_tests_2
+          run: dbt parse
+
+  # The maintenance macros scan every schema in the workspace, which is slow,
+  # so they run in their own job in parallel with the rest.
+  databricks-maintenance:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_maintenance
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Build the tables the maintenance macros operate on
+          working-directory: integration_tests_2
+          run: dbt build --target databricks --select maintenance_delta_table maintenance_view
+
+        - name: Run the maintenance macros on Databricks
+          working-directory: integration_tests_2
+          run: dbt run-operation test_maintenance_macros --target databricks
+
+  # Same tests as the `databricks` job, but with dbt v1 (dbt-core + dbt-databricks)
+  databricks-dbt-core:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_core
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-databricks
+          run: pip install "dbt-core>=1.11,<1.12" dbt-databricks
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Check the Databricks connection profile
+          working-directory: integration_tests_2
+          run: dbt debug --target databricks
+
+        - name: Build and test the macros on Databricks with dbt-core
+          working-directory: integration_tests_2
+          run: dbt build --target databricks
+
+  # Same as `databricks-maintenance`, but with dbt v1 (dbt-core + dbt-databricks)
+  databricks-maintenance-dbt-core:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_maintenance_dbt_core
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-databricks
+          run: pip install "dbt-core>=1.11,<1.12" dbt-databricks
+
+        - name: Install the package under test
+          working-directory: integration_tests_2
+          run: dbt deps
+
+        - name: Build the tables the maintenance macros operate on
+          working-directory: integration_tests_2
+          run: dbt build --target databricks --select maintenance_delta_table maintenance_view
+
+        - name: Run the maintenance macros on Databricks with dbt-core
+          working-directory: integration_tests_2
+          run: dbt run-operation test_maintenance_macros --target databricks
+
+  # spark_utils overrides the cross-database macros that dbt-utils < 1.0 ships
+  # (array_concat, etc.). These jobs install dbt-utils 0.9.6 and call them as `dbt_utils.X`.
+  databricks-dbt-utils-0-dbt-core:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_utils_0_dbt_core
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt-core and dbt-databricks
+          run: pip install "dbt-core>=1.11,<1.12" dbt-databricks
+
+        - name: Install the packages under test
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt deps
+
+        - name: Build and test with dbt-utils 0.9.6
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt build
+
+  databricks-dbt-utils-0-dbt-2:
+      runs-on: ubuntu-latest
+      env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+          DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
+          DATABRICKS_SCHEMA: spark_utils_ci_dbt_utils_0_dbt_2
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-python@v5
+          with:
+              python-version: "3.11"
+
+        - name: Install dbt
+          run: pip install "dbt>=2.0.0,<3.0.0"
+
+        - name: Install the packages under test
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt deps
+
+        - name: Build and test with dbt-utils 0.9.6
+          working-directory: integration_tests_dbt_utils_0
+          run: dbt build
