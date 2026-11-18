@@ -50,7 +50,8 @@
     {% call statement('column_information', fetch_result=True) %}
       DESCRIBE TABLE {{ table }} `{{ column[0] }}`
     {% endcall %}
-    {% if not load_result('column_information').table[1][1].startswith('struct') and not load_result('column_information').table[1][1].startswith('array')  %}
+    {% set column_type = load_result('column_information').table[1][1] %}
+    {% if not column_type.startswith('struct') and not column_type.startswith('array') %}
       {{ output_columns.append('`' ~ column[0] ~ '`') }}
     {% endif %}
   {% endfor %}
