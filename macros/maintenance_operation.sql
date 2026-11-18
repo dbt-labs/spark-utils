@@ -2,11 +2,8 @@
 
   {% set tables = [] %}
   {% for database in list_schemas(target.database) %}
-    {% set schema_relation = api.Relation.create(database=target.database, schema=database[0]) %}
-    {% for table in list_relations_without_caching(schema_relation) %}
-      {#- dbt-databricks returns named tuples (table_name first), dbt-spark returns rows (name second) -#}
-      {% set table_name = table.table_name if table.table_name is defined else table[1] %}
-      {% set db_tablename = database[0] ~ "." ~ table_name %}
+    {% for table in spark_utils.spark__get_relations_by_pattern(database[0], '*') %}
+      {% set db_tablename = database[0] ~ "." ~ table.identifier %}
       {% set is_match = modules.re.match(table_regex_pattern, db_tablename) %}
       {% if is_match %}
         {% call statement('table_detail', fetch_result=True) -%}
