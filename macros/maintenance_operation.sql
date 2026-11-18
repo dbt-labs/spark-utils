@@ -2,8 +2,7 @@
 
   {% set tables = [] %}
   {% for database in list_schemas(target.database) %}
-    {% set schema_relation = api.Relation.create(database=target.database, schema=database[0]) %}
-    {% for table in adapter.list_relations_without_caching(schema_relation) %}
+    {% for table in adapter.list_relations(database=target.database, schema=database[0]) %}
       {% set db_tablename = database[0] ~ "." ~ table.identifier %}
       {% set is_match = modules.re.match(table_regex_pattern, db_tablename) %}
       {% if is_match %}
