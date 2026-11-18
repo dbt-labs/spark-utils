@@ -1,0 +1,9 @@
+name: spark_utils_integration_tests_dbt_utils_0
+version: '0.1.0'
+config-version: 2
+profile: spark_utils_integration_tests_dbt_utils_0
+
+# The documented setup for spark_utils: dbt_utils macros are overridden by spark_utils
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: [spark_utils, dbt_utils]

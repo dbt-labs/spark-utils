@@ -1,0 +1,6 @@
+# dbt-utils < 1.0 still ships the cross-database macros (concat, dateadd, etc.)
+# that spark_utils overrides through dispatch.
+packages:
+  - local: ../
+  - package: dbt-labs/dbt_utils
+    version: 0.9.6

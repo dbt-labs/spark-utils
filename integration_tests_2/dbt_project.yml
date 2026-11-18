@@ -1,0 +1,8 @@
+name: spark_utils_integration_tests_2
+version: '0.1.0'
+config-version: 2
+profile: spark_utils_integration_tests_2
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: [spark_utils, dbt_utils]
