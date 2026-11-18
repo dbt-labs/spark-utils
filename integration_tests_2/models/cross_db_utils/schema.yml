@@ -1,0 +1,39 @@
+version: 2
+
+# Each model computes `actual` next to `expected`; every row must match.
+models:
+  - name: test_current_timestamp
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_assert_not_null
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_concat
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_datatypes
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_dateadd
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_datediff
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"
+  - name: test_split_part
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "actual <=> expected"

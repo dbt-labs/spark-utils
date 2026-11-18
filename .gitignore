@@ -7,3 +7,11 @@
 /**/__pycache__/
 test.env
 dbt_internal_packages/
+# duckdb
+*.db
+*.duckdb
+
+# dbt user-level file
+.user.yml
+
+package-lock.yml
