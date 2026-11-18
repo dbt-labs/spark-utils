@@ -1,9 +1,9 @@
 {% macro get_tables(table_regex_pattern='.*') %}
 
   {% set tables = [] %}
-  {% for database in spark__list_schemas('not_used') %}
-    {% for table in spark__list_relations_without_caching(database[0]) %}
-      {% set db_tablename = database[0] ~ "." ~ table[1] %}
+  {% for database in list_schemas(target.database) %}
+    {% for table in spark_utils.spark__get_relations_by_pattern(database[0], '*') %}
+      {% set db_tablename = database[0] ~ "." ~ table.identifier %}
       {% set is_match = modules.re.match(table_regex_pattern, db_tablename) %}
       {% if is_match %}
         {% call statement('table_detail', fetch_result=True) -%}
@@ -50,7 +50,8 @@
     {% call statement('column_information', fetch_result=True) %}
       DESCRIBE TABLE {{ table }} `{{ column[0] }}`
     {% endcall %}
-    {% if not load_result('column_information').table[1][1].startswith('struct') and not load_result('column_information').table[1][1].startswith('array')  %}
+    {% set column_type = load_result('column_information').table[1][1] %}
+    {% if not column_type.startswith('struct') and not column_type.startswith('array') %}
       {{ output_columns.append('`' ~ column[0] ~ '`') }}
     {% endif %}
   {% endfor %}
