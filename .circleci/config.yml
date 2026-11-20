@@ -1,7 +1,6 @@
 version: 2.1
 
 jobs:
-
   integration-dbt-utils-databricks: &databricks-odbc
     environment:
       DBT_INVOCATION_ENV: circle
@@ -15,7 +14,7 @@ jobs:
 
     steps:
       - checkout
-      
+
       - run: &pull-submodules
           name: "Pull Submodules"
           command: |
@@ -42,7 +41,7 @@ jobs:
 
       - run:
           name: "Run Tests - dbt-utils"
-            
+
           command: |
             . venv/bin/activate
             cd integration_tests/dbt_utils
@@ -61,7 +60,7 @@ jobs:
       - run: *pull-submodules
       - run: *setup-dbt
 
-      - run:  
+      - run:
           name: "Run Tests - Snowplow"
           command: |
             . venv/bin/activate
@@ -80,6 +79,10 @@ workflows:
   test-shims:
     jobs:
       - integration-dbt-utils-databricks:
-          context: aws-credentials
+          context:
+            - aws-credentials
+            - profile-databricks
       - integration-snowplow-databricks:
-          context: aws-credentials
+          context:
+            - aws-credentials
+            - profile-databricks
